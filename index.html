@@ -2,83 +2,611 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Global Office World | Wholesale Cloud Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --primary: #000000; --accent: #2563eb; --bg: #ffffff; --amy-beige: #f4f1ea; --text-main: #111827; --text-muted: #6b7280; --border: #eeeeee; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); overflow-x: hidden; }
-        header { background: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        .logo-box { background: black; color: white; padding: 4px 12px; font-weight: 800; font-size: 1.2rem; border-radius: 2px; cursor: pointer; text-transform: uppercase; }
-        .nav-right { display: flex; gap: 10px; }
-        .btn-nav { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: white; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: 0.2s; }
-        .btn-admin { background: var(--primary); color: white; border: none; }
-        .btn-logout { background: #fee2e2; color: #dc2626; border: none; display: none; }
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; align-items: center; justify-content: center; }
-        .login-card { background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
-        .login-input { padding: 15px; width: 100%; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 15px; font-size: 1rem; }
-        .wrapper { display: flex; min-height: calc(100vh - 70px); }
-        aside { width: 280px; background: #fdfdfd; padding: 2.5rem 1.5rem; border-right: 1px solid var(--border); flex-shrink: 0; }
-        .filter-title { font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 1.5rem; letter-spacing: 1.5px; }
-        .cat-item { padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.9rem; }
-        .cat-item:hover, .cat-item.active { background: #f1f5f9; color: var(--accent); font-weight: 600; }
-        main { flex-grow: 1; padding: 2.5rem 4%; width: 100%; }
-        .grid-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 20px; }
-        .search-bar { width: 100%; max-width: 350px; padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border); outline: none; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 35px; }
-        .product-card { background: white; border-radius: 16px; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; overflow: hidden; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
-        .img-container { background: #f8fafc; height: 320px; display: flex; align-items: center; justify-content: center; padding: 25px; }
-        .img-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .card-info { padding: 20px; }
-        .card-cat { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 5px; }
-        .card-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 5px; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: none; z-index: 2000; overflow-y: auto; }
-        .modal-content { display: flex; min-height: 100vh; width: 100%; position: relative; }
-        .m-left { flex: 1.2; background: var(--amy-beige); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; }
-        .main-display img { max-width: 90%; max-height: 70vh; object-fit: contain; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.1)); }
-        .gallery-thumbs { display: flex; gap: 15px; margin-top: 30px; }
-        .thumb { width: 80px; height: 80px; border: 2px solid white; cursor: pointer; border-radius: 10px; overflow: hidden; background: white; }
-        .thumb.active { border-color: var(--accent); }
-        .thumb img { width: 100%; height: 100%; object-fit: contain; }
-        .m-right { flex: 1; padding: 80px 8%; display: flex; flex-direction: column; justify-content: center; }
-        .close-btn { position: absolute; top: 40px; right: 50px; font-size: 1.4rem; cursor: pointer; color: #999; font-weight: 800; }
-        .m-title { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 25px; letter-spacing: -2px; }
-        .m-desc { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 40px; }
-        .variant-display-grid { border-top: 1px solid #eee; padding-top: 30px; margin-bottom: 40px; }
-        .color-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f9f9f9; }
-        .color-name { font-weight: 700; display: flex; align-items: center; gap: 10px; text-transform: uppercase; font-size: 0.9rem; }
-        .color-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #ddd; }
-        .stock-pill { background: #f0fdf4; color: #166534; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.75rem; }
-        .btn-wa-premium { background: #111; color: white; padding: 22px; border: none; border-radius: 4px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
-        .admin-card { background: white; padding: 35px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 30px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-        .full { grid-column: span 3; }
-        label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: block; }
-        input, select, textarea { padding: 12px; border: 1px solid #ddd; border-radius: 8px; width: 100%; font-size: 0.95rem; }
-        .variant-editor-row { display: grid; grid-template-columns: 1fr 120px 50px; gap: 10px; margin-bottom: 10px; }
-        .btn-add-var { background: #f1f5f9; border: 1px dashed #cbd5e1; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; margin-top: 10px; }
-        .admin-item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
-        .admin-item-row img { width: 50px; height: 50px; object-fit: contain; background: #f9f9f9; border-radius: 5px; }
-        .hidden { display: none; }
-        @media (max-width: 1000px) { .wrapper { flex-direction: column; } aside { width: 100%; display: flex; overflow-x: auto; padding: 10px; border-right: none; border-bottom: 1px solid var(--border); } .modal-content { flex-direction: column; } .m-left, .m-right { width: 100%; padding: 40px 5%; } .m-title { font-size: 2.5rem; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        :root {
+            --primary: #000000;
+            --accent: #2563eb;
+            --bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border: #eef2f6;
+            --shadow-sm: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* ===== HEADER + RESPONSIVE NAV ===== */
+        header {
+            background: white;
+            padding: 0.75rem 5%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .logo-img {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.2s ease;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn-nav {
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-admin {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-logout {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            display: none;
+        }
+
+        /* login overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.94);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+        }
+
+        .login-card {
+            background: white;
+            padding: 32px 24px;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 30px 40px rgba(0,0,0,0.2);
+        }
+
+        .login-input {
+            padding: 14px;
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 60px;
+            margin-bottom: 18px;
+            font-size: 1rem;
+        }
+
+        /* LAYOUT: wrapper becomes responsive */
+        .wrapper {
+            display: flex;
+            min-height: calc(100vh - 74px);
+        }
+
+        /* SIDEBAR: horizontal scroll on mobile */
+        aside {
+            width: 260px;
+            background: #fefefe;
+            padding: 2rem 1.2rem;
+            border-right: 1px solid var(--border);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .filter-title {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .cat-item {
+            padding: 10px 14px;
+            border-radius: 40px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .cat-item:hover, .cat-item.active {
+            background: #f1f5f9;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* main content */
+        main {
+            flex-grow: 1;
+            padding: 2rem 4%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .grid-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .grid-controls h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 320px;
+            padding: 12px 20px;
+            border-radius: 60px;
+            border: 1px solid var(--border);
+            outline: none;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+
+        /* PRODUCT GRID - fully responsive */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 28px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            transition: 0.25s ease;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Watermark pattern (small repeating logo) */
+        .img-container {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), 
+                              url('https://globalofficeworld.com/cdn/shop/collections/Global_Office_World_1200x1200.png?v=1757670343');
+            background-size: 55px;
+            background-repeat: repeat;
+            background-position: center;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .img-container img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
+        }
+
+        .card-info {
+            padding: 1.2rem;
+        }
+
+        .card-cat {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        /* MODAL - fully responsive with flex column on mobile */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: none;
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            display: flex;
+            min-height: 100%;
+            width: 100%;
+            position: relative;
+            flex-direction: row;
+        }
+
+        .m-left {
+            flex: 1.2;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(244, 241, 234, 0.85)), 
+                              url('https://globalofficeworld.com/cdn/shop/collections/Global_Office_World_1200x1200.png?v=1757670343');
+            background-size: 70px;
+            background-repeat: repeat;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .main-display img {
+            max-width: 100%;
+            max-height: 55vh;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2));
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .thumb {
+            width: 65px;
+            height: 65px;
+            border: 2px solid white;
+            cursor: pointer;
+            border-radius: 14px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .thumb.active {
+            border-color: var(--accent);
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .m-right {
+            flex: 1;
+            padding: 60px 7%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: white;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #1f2937;
+            font-weight: 600;
+            z-index: 10;
+            background: rgba(255,255,255,0.8);
+            width: 44px;
+            height: 44px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .m-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 18px;
+            letter-spacing: -1px;
+        }
+
+        .m-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .color-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .color-name {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+        }
+
+        .stock-pill {
+            background: #f0fdf4;
+            color: #166534;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+
+        .btn-wa-premium {
+            background: #111;
+            color: white;
+            padding: 18px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+
+        /* admin panel responsive */
+        .admin-card {
+            background: white;
+            padding: 28px 24px;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input, select, textarea {
+            padding: 12px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .variant-editor-row {
+            display: grid;
+            grid-template-columns: 1fr 100px 40px;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .btn-add-var {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 12px;
+            width: 100%;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .admin-item-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 16px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .admin-item-row img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #f9f9f9;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* ===== RESPONSIVE BREAKPOINTS ===== */
+        @media (max-width: 850px) {
+            .wrapper {
+                flex-direction: column;
+            }
+            aside {
+                width: 100%;
+                display: flex;
+                overflow-x: auto;
+                padding: 1rem;
+                gap: 0.5rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                scrollbar-width: thin;
+                white-space: nowrap;
+            }
+            .filter-title {
+                display: none;
+            }
+            .cat-item {
+                display: inline-block;
+                margin-bottom: 0;
+                white-space: nowrap;
+            }
+            .logo-img {
+                height: 40px;
+            }
+            .grid-controls h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .modal-content {
+                flex-direction: column;
+            }
+            .m-left, .m-right {
+                width: 100%;
+                padding: 2rem 1.5rem;
+            }
+            .m-left {
+                min-height: 380px;
+            }
+            .m-title {
+                font-size: 1.8rem;
+            }
+            .close-btn {
+                top: 12px;
+                right: 16px;
+                background: white;
+            }
+            .btn-nav {
+                padding: 6px 14px;
+                font-size: 0.75rem;
+            }
+            .product-grid {
+                gap: 18px;
+            }
+            .variant-editor-row {
+                grid-template-columns: 1fr 90px 35px;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .nav-right {
+                justify-content: center;
+            }
+            .logo-container {
+                justify-content: center;
+            }
+            .img-container {
+                height: 200px;
+            }
+            .card-name {
+                font-size: 0.95rem;
+            }
+            .search-bar {
+                max-width: 100%;
+            }
+            .admin-item-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div id="login-overlay">
     <div class="login-card">
-        <h2>Admin Portal</h2>
+        <h2 style="margin-bottom: 20px;">Admin Portal</h2>
         <input type="password" id="admin-pass-field" class="login-input" placeholder="Enter Security Password">
-        <button class="btn-nav btn-admin" style="width: 100%; padding: 15px;" onclick="validateLogin()">Login</button>
-        <p style="margin-top: 15px; color: #999; cursor: pointer;" onclick="toggleLogin(false)">Cancel</p>
+        <button class="btn-nav btn-admin" style="width: 100%; padding: 14px; border-radius: 50px;" onclick="validateLogin()">Login</button>
+        <p style="margin-top: 18px; color: #aaa; cursor: pointer;" onclick="toggleLogin(false)">Cancel</p>
     </div>
 </div>
 
 <header>
-    <div class="logo-box" onclick="location.reload()">GLOBAL OFFICE WORLD</div>
+    <div class="logo-container" onclick="location.reload()">
+        <img src="image/Global_Office_World_1200x1200 (1).webp" alt="Global Office World" class="logo-img" onerror="this.src='https://placehold.co/400x200?text=GOW'">
+    </div>
     <div class="nav-right">
         <button class="btn-nav" onclick="showPage('store')">Collection</button>
         <button id="nav-admin-btn" class="btn-nav btn-admin" onclick="toggleLogin(true)">Admin Portal</button>
@@ -88,10 +616,10 @@
 
 <div class="wrapper">
     <aside id="sidebar">
-        <h3 class="filter-title">Filter by</h3>
+        <h3 class="filter-title">FILTER BY</h3>
         <div class="cat-item active" onclick="filterItems('All', this)">All Items</div>
         <div class="cat-item" onclick="filterItems('Executive Highback', this)">Executive Highback</div>
-        <div class="cat-item" onclick="filterItems('Mesh Highback Chair', this)">Mesh Highback Chair</div>
+        <div class="cat-item" onclick="filterItems('Mesh Highback Chair', this)">Mesh Highback</div>
         <div class="cat-item" onclick="filterItems('Leatherite Highback Chair', this)">Leatherite Highback</div>
         <div class="cat-item" onclick="filterItems('Midback Chair', this)">Midback Chair</div>
         <div class="cat-item" onclick="filterItems('Visitor Chair', this)">Visitor Chair</div>
@@ -102,7 +630,7 @@
     <main>
         <div id="store-page">
             <div class="grid-controls">
-                <h1 style="font-size: 2rem; font-weight: 800;">Catalog</h1>
+                <h1>Catalog</h1>
                 <input type="text" id="search" class="search-bar" placeholder="Search code or model..." oninput="renderStore()">
             </div>
             <div class="product-grid" id="product-grid"></div>
@@ -132,14 +660,14 @@
                             </select>
                         </div>
                         <div class="full">
-                            <label>Color Options & Stock Quantities</label>
+                            <label>Color Options & Stock</label>
                             <div id="variant-list-admin"></div>
                             <button type="button" class="btn-add-var" onclick="addVariantRow()">+ Add Color Variant</button>
                         </div>
                         <div class="full"><label>Description</label><textarea id="desc" rows="2"></textarea></div>
                     </div>
-                    <button type="submit" class="btn-nav btn-admin" style="width: 100%; margin-top: 20px; padding: 18px;">SAVE TO CLOUD</button>
-                    <button type="button" id="cancel-btn" class="hidden" onclick="resetForm()" style="width: 100%; margin-top: 10px; cursor: pointer;">Cancel Edit</button>
+                    <button type="submit" class="btn-nav btn-admin" style="width: 100%; margin-top: 24px; padding: 16px; border-radius: 50px;">SAVE TO CLOUD</button>
+                    <button type="button" id="cancel-btn" class="hidden" onclick="resetForm()" style="width: 100%; margin-top: 12px; cursor: pointer;">Cancel Edit</button>
                 </form>
             </div>
             <div class="admin-card">
@@ -158,11 +686,11 @@
             <div class="gallery-thumbs" id="modalThumbs"></div>
         </div>
         <div class="m-right">
-            <p id="modalRefCode" style="color:var(--accent); font-weight:800; font-size:0.8rem; margin-bottom:10px;"></p>
+            <p id="modalRefCode" style="color:var(--accent); font-weight:800; font-size:0.75rem; letter-spacing:1px; margin-bottom:10px;"></p>
             <h1 class="m-title" id="modalTitle"></h1>
             <p class="m-desc" id="modalDesc"></p>
             <div class="variant-display-grid">
-                <label style="margin-bottom:15px; display:block;">Available Finishes</label>
+                <label style="margin-bottom:14px; display:block;">Available Finishes</label>
                 <div id="modal-variant-rows"></div>
             </div>
             <button class="btn-wa-premium" onclick="whatsappContact()">Inquire via WhatsApp</button>
@@ -171,16 +699,14 @@
 </div>
 
 <script>
-    // --- STEP 1: CONFIGURATION ---
     const SUPABASE_URL = 'https://uijuhqcgcukskvgoicgs.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_NIpA7JniaOYXFqD_MFaJHQ_ICLldPRB'; 
+    const SUPABASE_KEY = 'sb_publishable_NIpA7JniaOYXFqD_MFaJHQ_ICLldPRB';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let isAdmin = false;
     let currentCategory = "All";
     let allProducts = [];
 
-    // --- STEP 2: INITIALIZATION ---
     async function init() {
         await fetchProducts();
         renderStore();
@@ -196,14 +722,13 @@
         }
     }
 
-    // --- STEP 3: LOGIN LOGIC ---
     function toggleLogin(show) {
-        if(isAdmin && show) { showPage('admin'); return; }
+        if (isAdmin && show) { showPage('admin'); return; }
         document.getElementById('login-overlay').style.display = show ? 'flex' : 'none';
     }
 
     function validateLogin() {
-        if(document.getElementById('admin-pass-field').value === "uzainali1122@") {
+        if (document.getElementById('admin-pass-field').value === "uzainali1122@") {
             isAdmin = true;
             document.getElementById('nav-admin-btn').style.display = 'none';
             document.getElementById('nav-logout-btn').style.display = 'block';
@@ -220,42 +745,43 @@
         showPage('store');
     }
 
-    // --- STEP 4: PRODUCT MANAGEMENT ---
+    async function uploadToBucket(file) {
+        if (!file) return null;
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const filePath = `items/${fileName}`;
+        const { data, error } = await _supabase.storage.from('product-images').upload(filePath, file);
+        if (error) { console.error("Upload Error:", error); return null; }
+        const { data: urlData } = _supabase.storage.from('product-images').getPublicUrl(filePath);
+        return urlData.publicUrl;
+    }
+
     function addVariantRow(color = "", qty = "") {
         const container = document.getElementById('variant-list-admin');
         const div = document.createElement('div');
         div.className = 'variant-editor-row';
         div.innerHTML = `
-            <input type="text" placeholder="Color" value="${color}" class="v-color" required>
+            <input type="text" placeholder="Color name" value="${color}" class="v-color" required>
             <input type="number" placeholder="Qty" value="${qty}" class="v-qty" required>
-            <button type="button" onclick="this.parentElement.remove()" style="color:red; background:none; border:none; cursor:pointer; font-weight:800;">✕</button>
+            <button type="button" onclick="this.parentElement.remove()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
         `;
         container.appendChild(div);
     }
 
-    async function toBase64(file) {
-        if(!file) return null;
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    }
-
     document.getElementById('product-form').onsubmit = async (e) => {
         e.preventDefault();
+        const saveBtn = e.target.querySelector('button[type="submit"]');
+        saveBtn.innerText = "UPLOADING...";
+        saveBtn.disabled = true;
+
         const id = document.getElementById('edit-id').value;
-        
-        // 1. Collect variants
         const variants = [];
         document.querySelectorAll('.variant-editor-row').forEach(row => {
-            const c = row.querySelector('.v-color').value;
-            const q = row.querySelector('.v-qty').value;
-            if(c && q) variants.push({ color: c, qty: q });
+            const c = row.querySelector('.v-color')?.value;
+            const q = row.querySelector('.v-qty')?.value;
+            if (c && q) variants.push({ color: c, qty: parseInt(q) || 0 });
         });
 
-        // 2. Prepare basic data
         let productData = {
             name: document.getElementById('name').value,
             code: document.getElementById('code').value,
@@ -264,58 +790,49 @@
             variants: variants
         };
 
-        // 3. Handle Images
         const f1 = document.getElementById('img1').files[0];
         const f2 = document.getElementById('img2').files[0];
         const f3 = document.getElementById('img3').files[0];
 
-        if (f1) productData.img1 = await toBase64(f1);
-        if (f2) productData.img2 = await toBase64(f2);
-        if (f3) productData.img3 = await toBase64(f3);
+        if (f1) productData.img1 = await uploadToBucket(f1);
+        if (f2) productData.img2 = await uploadToBucket(f2);
+        if (f3) productData.img3 = await uploadToBucket(f3);
 
-        // 4. Send to Cloud
         try {
             if (id) {
-                const { error } = await _supabase.from('products').update(productData).eq('id', id);
-                if (error) throw error;
+                await _supabase.from('products').update(productData).eq('id', id);
             } else {
-                const { error } = await _supabase.from('products').insert([productData]);
-                if (error) throw error;
+                await _supabase.from('products').insert([productData]);
             }
-
-            alert("Successfully Saved to Cloud!");
+            alert("Successfully Saved!");
             await fetchProducts();
             resetForm();
             renderAdminList();
             renderStore();
-        } catch (err) {
-            console.error("Database Error:", err);
-            alert("Save failed: " + err.message);
-        }
+        } catch (err) { alert("Save failed: " + err.message); }
+        finally { saveBtn.innerText = "SAVE TO CLOUD"; saveBtn.disabled = false; }
     };
 
-    // --- STEP 5: RENDERING LOGIC ---
     function renderStore() {
         const grid = document.getElementById('product-grid');
         const q = document.getElementById('search').value.toLowerCase();
         grid.innerHTML = "";
-        
         allProducts.forEach(p => {
-            const matchesSearch = p.code.toLowerCase().includes(q) || p.name.toLowerCase().includes(q);
+            const matchesSearch = (p.code?.toLowerCase() || '').includes(q) || (p.name?.toLowerCase() || '').includes(q);
             const matchesCat = (currentCategory === "All" || p.cat === currentCategory);
-
-            if(matchesCat && matchesSearch) {
+            if (matchesCat && matchesSearch) {
                 grid.innerHTML += `
                     <div class="product-card" onclick="openModal(${p.id})">
-                        <div class="img-container"><img src="${p.img1 || ''}" alt="${p.name}"></div>
+                        <div class="img-container"><img src="${p.img1 || ''}" alt="${p.name}" onerror="this.src='https://placehold.co/400x300?text=No+Image'"></div>
                         <div class="card-info">
-                            <p class="card-cat">${p.cat}</p>
-                            <p class="card-name">${p.name}</p>
-                            <p style="font-size:0.8rem; color:#999">CODE: ${p.code}</p>
+                            <p class="card-cat">${p.cat || ''}</p>
+                            <p class="card-name">${p.name || ''}</p>
+                            <p style="font-size:0.75rem; color:#999">CODE: ${p.code || ''}</p>
                         </div>
                     </div>`;
             }
         });
+        if(grid.innerHTML === "") grid.innerHTML = "<div style='text-align:center; padding: 60px;'>No products found.</div>";
     }
 
     function renderAdminList() {
@@ -324,11 +841,11 @@
         allProducts.forEach(p => {
             list.innerHTML += `
                 <div class="admin-item-row">
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <img src="${p.img1 || ''}">
+                    <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                        <img src="${p.img1 || ''}" onerror="this.src='https://placehold.co/60x60'">
                         <span><strong>${p.code}</strong> - ${p.name}</span>
                     </div>
-                    <div>
+                    <div style="display: flex; gap: 8px;">
                         <button class="btn-nav" onclick="editProduct(${p.id})">Edit</button>
                         <button class="btn-nav" style="color:red" onclick="deleteProduct(${p.id})">Delete</button>
                     </div>
@@ -336,32 +853,25 @@
         });
     }
 
-    // --- STEP 6: UTILS ---
     function editProduct(id) {
         const p = allProducts.find(item => item.id === id);
-        if(!p) return;
+        if (!p) return;
         document.getElementById('edit-id').value = p.id;
-        document.getElementById('name').value = p.name;
-        document.getElementById('code').value = p.code;
-        document.getElementById('cat').value = p.cat;
+        document.getElementById('name').value = p.name || "";
+        document.getElementById('code').value = p.code || "";
+        document.getElementById('cat').value = p.cat || "";
         document.getElementById('desc').value = p.description || "";
         document.getElementById('variant-list-admin').innerHTML = "";
-        if(p.variants) p.variants.forEach(v => addVariantRow(v.color, v.qty));
+        if (p.variants && p.variants.length) p.variants.forEach(v => addVariantRow(v.color, v.qty));
         document.getElementById('admin-title').innerText = "Editing " + p.code;
         document.getElementById('cancel-btn').classList.remove('hidden');
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }
 
     async function deleteProduct(id) {
-        if(confirm("Permanently delete this item from Cloud?")) {
+        if (confirm("Permanently delete this item?")) {
             const { error } = await _supabase.from('products').delete().eq('id', id);
-            if(!error) {
-                await fetchProducts();
-                renderAdminList();
-                renderStore();
-            } else {
-                alert("Delete failed: " + error.message);
-            }
+            if (!error) { await fetchProducts(); renderAdminList(); renderStore(); }
         }
     }
 
@@ -369,30 +879,24 @@
         const p = allProducts.find(item => item.id === id);
         if (!p) return;
         document.getElementById('modalMainImg').src = p.img1 || '';
-        document.getElementById('modalTitle').innerText = p.name;
-        document.getElementById('modalRefCode').innerText = "REFERENCE: " + p.code;
-        document.getElementById('modalDesc').innerText = p.description || "Premium wholesale quality seating solution.";
-        
+        document.getElementById('modalTitle').innerText = p.name || '';
+        document.getElementById('modalRefCode').innerText = "REF: " + (p.code || '');
+        document.getElementById('modalDesc').innerText = p.description || "Premium wholesale quality — contact for bulk orders.";
         const variantBox = document.getElementById('modal-variant-rows');
         variantBox.innerHTML = "";
-        if(p.variants) {
+        if (p.variants && p.variants.length) {
             p.variants.forEach(v => {
                 variantBox.innerHTML += `
                     <div class="color-row">
-                        <div class="color-name">
-                            <div class="color-dot" style="background:${v.color.toLowerCase()}"></div>
-                            ${v.color}
-                        </div>
+                        <div class="color-name"><div class="color-dot" style="background:${v.color.toLowerCase()}"></div>${v.color}</div>
                         <div class="stock-pill">${v.qty} Units Ready</div>
                     </div>`;
             });
-        }
-
+        } else { variantBox.innerHTML = '<p>Contact for color options</p>'; }
         const thumbs = document.getElementById('modalThumbs');
-        thumbs.innerHTML = `<div class="thumb active" onclick="swapMain('${p.img1}', this)"><img src="${p.img1}"></div>`;
-        if(p.img2) thumbs.innerHTML += `<div class="thumb" onclick="swapMain('${p.img2}', this)"><img src="${p.img2}"></div>`;
-        if(p.img3) thumbs.innerHTML += `<div class="thumb" onclick="swapMain('${p.img3}', this)"><img src="${p.img3}"></div>`;
-
+        thumbs.innerHTML = `<div class="thumb active" onclick="swapMain('${p.img1 || ''}', this)"><img src="${p.img1 || ''}"></div>`;
+        if (p.img2) thumbs.innerHTML += `<div class="thumb" onclick="swapMain('${p.img2}', this)"><img src="${p.img2}"></div>`;
+        if (p.img3) thumbs.innerHTML += `<div class="thumb" onclick="swapMain('${p.img3}', this)"><img src="${p.img3}"></div>`;
         document.getElementById('pModal').style.display = 'block';
         document.body.style.overflow = 'hidden';
     }
@@ -401,14 +905,15 @@
         document.getElementById('product-form').reset();
         document.getElementById('variant-list-admin').innerHTML = "";
         document.getElementById('edit-id').value = "";
-        document.getElementById('cancel-btn').classList.add('hidden');
         document.getElementById('admin-title').innerText = "Inventory Manager";
+        document.getElementById('cancel-btn').classList.add('hidden');
     }
 
-    function showPage(p) {
-        document.getElementById('store-page').classList.toggle('hidden', p !== 'store');
-        document.getElementById('sidebar').classList.toggle('hidden', p !== 'store');
-        document.getElementById('admin-page').classList.toggle('hidden', p !== 'admin');
+    function showPage(page) {
+        document.getElementById('store-page').classList.toggle('hidden', page !== 'store');
+        document.getElementById('sidebar').classList.toggle('hidden', page !== 'store');
+        document.getElementById('admin-page').classList.toggle('hidden', page !== 'admin');
+        if (page === 'admin') renderAdminList();
     }
 
     function filterItems(cat, el) {
@@ -424,12 +929,11 @@
         el.classList.add('active');
     }
 
-    function closeModal() { document.getElementById('pModal').style.display='none'; document.body.style.overflow='auto'; }
-
+    function closeModal() { document.getElementById('pModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
     function whatsappContact() {
         const name = document.getElementById('modalTitle').innerText;
         const code = document.getElementById('modalRefCode').innerText;
-        const msg = encodeURIComponent(`*GOW Wholesale Inquiry*\n*Model:* ${name}\n*${code}*\n\nPlease share wholesale price list.`);
+        const msg = encodeURIComponent(`*Wholesale Inquiry*\n*Model:* ${name}\n${code}`);
         window.open(`https://wa.me/923224164103?text=${msg}`);
     }
 
