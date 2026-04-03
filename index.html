@@ -30,10 +30,10 @@
             overflow-x: hidden;
         }
 
-        /* ===== HEADER + RESPONSIVE NAV ===== */
+        /* ===== HEADER + BIG LOGO + TEXT ===== */
         header {
             background: white;
-            padding: 0.75rem 5%;
+            padding: 0.8rem 5%;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -49,31 +49,44 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            gap: 12px;
             flex-shrink: 0;
         }
 
+        /* BIG LOGO */
         .logo-img {
-            height: 48px;
+            height: 70px;
             width: auto;
             object-fit: contain;
-            transition: all 0.2s ease;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.08));
+        }
+
+        .brand-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            white-space: nowrap;
         }
 
         .nav-right {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             flex-wrap: wrap;
             justify-content: flex-end;
         }
 
         .btn-nav {
-            padding: 8px 20px;
+            padding: 10px 24px;
             border-radius: 40px;
             border: 1px solid var(--border);
             background: white;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             transition: 0.2s;
             white-space: nowrap;
         }
@@ -125,20 +138,19 @@
             font-size: 1rem;
         }
 
-        /* LAYOUT: wrapper becomes responsive */
+        /* LAYOUT */
         .wrapper {
             display: flex;
-            min-height: calc(100vh - 74px);
+            min-height: calc(100vh - 90px);
         }
 
         /* SIDEBAR: horizontal scroll on mobile */
         aside {
-            width: 260px;
+            width: 270px;
             background: #fefefe;
             padding: 2rem 1.2rem;
             border-right: 1px solid var(--border);
             flex-shrink: 0;
-            transition: all 0.2s;
         }
 
         .filter-title {
@@ -151,7 +163,7 @@
         }
 
         .cat-item {
-            padding: 10px 14px;
+            padding: 10px 16px;
             border-radius: 40px;
             margin-bottom: 6px;
             cursor: pointer;
@@ -179,38 +191,39 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             flex-wrap: wrap;
             gap: 1rem;
         }
 
         .grid-controls h1 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 800;
             letter-spacing: -0.5px;
         }
 
         .search-bar {
             width: 100%;
-            max-width: 320px;
-            padding: 12px 20px;
+            max-width: 340px;
+            padding: 14px 24px;
             border-radius: 60px;
             border: 1px solid var(--border);
             outline: none;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             background: #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
 
-        /* PRODUCT GRID - fully responsive */
+        /* PRODUCT GRID - BIGGER IMAGES & BETTER CARDS */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 32px;
         }
 
         .product-card {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             border: 1px solid var(--border);
             transition: 0.25s ease;
             cursor: pointer;
@@ -219,34 +232,42 @@
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-6px);
+            box-shadow: 0 24px 36px -14px rgba(0, 0, 0, 0.12);
         }
 
-        /* Watermark pattern (small repeating logo) */
+        /* LARGE PRODUCT IMAGE CONTAINER */
         .img-container {
             background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), 
                               url('https://globalofficeworld.com/cdn/shop/collections/Global_Office_World_1200x1200.png?v=1757670343');
-            background-size: 55px;
+            background-size: 65px;
             background-repeat: repeat;
             background-position: center;
-            height: 240px;
+            height: 320px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 28px;
             border-bottom: 1px solid var(--border);
         }
 
+        /* BIG PRODUCT IMAGE */
         .img-container img {
-            max-width: 85%;
-            max-height: 85%;
+            max-width: 130%;
+            max-height: 130%;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
+            filter: drop-shadow(0 12px 20px rgba(0,0,0,0.1));
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover .img-container img {
+            transform: scale(1.02);
         }
 
         .card-info {
-            padding: 1.2rem;
+            padding: 1.5rem;
         }
 
         .card-cat {
@@ -254,17 +275,17 @@
             font-weight: 800;
             text-transform: uppercase;
             color: var(--accent);
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
         }
 
         .card-name {
-            font-size: 1.05rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
-        /* MODAL - fully responsive with flex column on mobile */
+        /* MODAL - FULLY RESPONSIVE */
         .modal {
             position: fixed;
             top: 0;
@@ -287,9 +308,9 @@
 
         .m-left {
             flex: 1.2;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(244, 241, 234, 0.85)), 
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(244, 241, 234, 0.85)), 
                               url('https://globalofficeworld.com/cdn/shop/collections/Global_Office_World_1200x1200.png?v=1757670343');
-            background-size: 70px;
+            background-size: 80px;
             background-repeat: repeat;
             background-position: center;
             display: flex;
@@ -301,28 +322,28 @@
 
         .main-display img {
             max-width: 100%;
-            max-height: 55vh;
+            max-height: 60vh;
             object-fit: contain;
             filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2));
         }
 
         .gallery-thumbs {
             display: flex;
-            gap: 12px;
-            margin-top: 28px;
+            gap: 14px;
+            margin-top: 32px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .thumb {
-            width: 65px;
-            height: 65px;
+            width: 75px;
+            height: 75px;
             border: 2px solid white;
             cursor: pointer;
-            border-radius: 14px;
+            border-radius: 18px;
             overflow: hidden;
             background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
         }
 
         .thumb.active {
@@ -346,43 +367,44 @@
 
         .close-btn {
             position: absolute;
-            top: 24px;
-            right: 28px;
+            top: 28px;
+            right: 32px;
             font-size: 1.8rem;
             cursor: pointer;
             color: #1f2937;
             font-weight: 600;
             z-index: 10;
-            background: rgba(255,255,255,0.8);
-            width: 44px;
-            height: 44px;
+            background: rgba(255,255,255,0.9);
+            width: 48px;
+            height: 48px;
             border-radius: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .m-title {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 800;
             line-height: 1.2;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             letter-spacing: -1px;
         }
 
         .m-desc {
             color: var(--text-muted);
             font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
+            line-height: 1.7;
+            margin-bottom: 32px;
         }
 
         .color-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 14px 0;
             border-bottom: 1px solid #f0f0f0;
         }
 
@@ -390,14 +412,14 @@
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-transform: uppercase;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
         .color-dot {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             border: 1px solid #ddd;
         }
@@ -405,7 +427,7 @@
         .stock-pill {
             background: #f0fdf4;
             color: #166534;
-            padding: 4px 14px;
+            padding: 5px 16px;
             border-radius: 40px;
             font-weight: 800;
             font-size: 0.75rem;
@@ -421,10 +443,10 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 20px;
+            margin-top: 24px;
         }
 
-        /* admin panel responsive */
+        /* admin panel */
         .admin-card {
             background: white;
             padding: 28px 24px;
@@ -489,10 +511,10 @@
         }
 
         .admin-item-row img {
-            width: 48px;
-            height: 48px;
+            width: 55px;
+            height: 55px;
             object-fit: contain;
-            border-radius: 12px;
+            border-radius: 14px;
             background: #f9f9f9;
         }
 
@@ -501,7 +523,23 @@
         }
 
         /* ===== RESPONSIVE BREAKPOINTS ===== */
-        @media (max-width: 850px) {
+        @media (max-width: 900px) {
+            .logo-img {
+                height: 55px;
+            }
+            .brand-text {
+                font-size: 1.3rem;
+            }
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 24px;
+            }
+            .img-container {
+                height: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
             .wrapper {
                 flex-direction: column;
             }
@@ -525,42 +563,60 @@
                 white-space: nowrap;
             }
             .logo-img {
-                height: 40px;
+                height: 50px;
+            }
+            .brand-text {
+                font-size: 1.2rem;
             }
             .grid-controls h1 {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
+            }
+            .img-container {
+                height: 260px;
+            }
+            .card-name {
+                font-size: 1rem;
             }
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 650px) {
             .modal-content {
                 flex-direction: column;
             }
             .m-left, .m-right {
                 width: 100%;
-                padding: 2rem 1.5rem;
+                padding: 2rem 1.2rem;
             }
             .m-left {
                 min-height: 380px;
             }
             .m-title {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             .close-btn {
                 top: 12px;
                 right: 16px;
                 background: white;
-            }
-            .btn-nav {
-                padding: 6px 14px;
-                font-size: 0.75rem;
+                width: 40px;
+                height: 40px;
             }
             .product-grid {
-                gap: 18px;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .img-container {
+                height: 280px;
+                padding: 20px;
+            }
+            .img-container img {
+                max-width: 90%;
+                max-height: 90%;
+            }
+            .card-info {
+                padding: 1.2rem;
             }
             .variant-editor-row {
-                grid-template-columns: 1fr 90px 35px;
-                gap: 8px;
+                grid-template-columns: 1fr 80px 35px;
             }
         }
 
@@ -569,18 +625,23 @@
                 flex-direction: column;
                 align-items: stretch;
                 text-align: center;
-            }
-            .nav-right {
-                justify-content: center;
+                padding: 0.8rem 4%;
             }
             .logo-container {
                 justify-content: center;
             }
-            .img-container {
-                height: 200px;
+            .nav-right {
+                justify-content: center;
             }
-            .card-name {
-                font-size: 0.95rem;
+            .logo-img {
+                height: 48px;
+            }
+            .brand-text {
+                font-size: 1rem;
+                white-space: normal;
+            }
+            .img-container {
+                height: 240px;
             }
             .search-bar {
                 max-width: 100%;
@@ -588,6 +649,10 @@
             .admin-item-row {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+            .btn-nav {
+                padding: 8px 18px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -606,6 +671,7 @@
 <header>
     <div class="logo-container" onclick="location.reload()">
         <img src="image/Global_Office_World_1200x1200 (1).webp" alt="Global Office World" class="logo-img" onerror="this.src='https://placehold.co/400x200?text=GOW'">
+        <span class="brand-text">Global Office World</span>
     </div>
     <div class="nav-right">
         <button class="btn-nav" onclick="showPage('store')">Collection</button>
@@ -763,7 +829,7 @@
         div.innerHTML = `
             <input type="text" placeholder="Color name" value="${color}" class="v-color" required>
             <input type="number" placeholder="Qty" value="${qty}" class="v-qty" required>
-            <button type="button" onclick="this.parentElement.remove()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+            <button type="button" onclick="this.parentElement.remove()" style="background:none; border:none; font-size:1.3rem; cursor:pointer;">✕</button>
         `;
         container.appendChild(div);
     }
@@ -823,7 +889,7 @@
             if (matchesCat && matchesSearch) {
                 grid.innerHTML += `
                     <div class="product-card" onclick="openModal(${p.id})">
-                        <div class="img-container"><img src="${p.img1 || ''}" alt="${p.name}" onerror="this.src='https://placehold.co/400x300?text=No+Image'"></div>
+                        <div class="img-container"><img src="${p.img1 || ''}" alt="${p.name}" onerror="this.src='https://placehold.co/500x400?text=Product'"></div>
                         <div class="card-info">
                             <p class="card-cat">${p.cat || ''}</p>
                             <p class="card-name">${p.name || ''}</p>
@@ -842,7 +908,7 @@
             list.innerHTML += `
                 <div class="admin-item-row">
                     <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
-                        <img src="${p.img1 || ''}" onerror="this.src='https://placehold.co/60x60'">
+                        <img src="${p.img1 || ''}" onerror="this.src='https://placehold.co/80x80'">
                         <span><strong>${p.code}</strong> - ${p.name}</span>
                     </div>
                     <div style="display: flex; gap: 8px;">
