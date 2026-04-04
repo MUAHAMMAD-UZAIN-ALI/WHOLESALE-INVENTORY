@@ -742,6 +742,7 @@
         <img src="https://globalofficeworld.com/cdn/shop/collections/Global_Office_World_1200x1200.png?v=1757670343" alt="Global Office World" class="logo-img" onerror="this.src='https://placehold.co/400x200?text=GOW'">
         <span class="brand-text">Global Office World</span>
     </div>
+    <div style="text-align: center; " class="brand-text"><b>WHOLESALE</b></div>
     <div class="nav-right">
         <button class="btn-nav" onclick="showPage('store')">Collection</button>
         <button id="nav-admin-btn" class="btn-nav btn-admin" onclick="toggleLogin(true)">Admin Portal</button>
@@ -760,6 +761,8 @@
         <div class="cat-item" onclick="filterItems('Visitor Chair', this)">Visitor Chair</div>
         <div class="cat-item" onclick="filterItems('Counter Stool', this)">Counter Stool</div>
         <div class="cat-item" onclick="filterItems('Seating Bench', this)">Seating Bench</div>
+        <!-- NEW CATEGORY: GAMING CHAIR -->
+        <div class="cat-item" onclick="filterItems('Gaming Chair', this)">Gaming Chair</div>
     </aside>
 
     <main>
@@ -792,6 +795,7 @@
                                 <option>Visitor Chair</option>
                                 <option>Counter Stool</option>
                                 <option>Seating Bench</option>
+                                <option>Gaming Chair</option>
                             </select>
                         </div>
                         <div class="full">
@@ -1069,7 +1073,7 @@
         const name = document.getElementById('modalTitle').innerText;
         const code = document.getElementById('modalRefCode').innerText;
         const msg = encodeURIComponent(`*Wholesale Inquiry*\n*Model:* ${name}\n${code}`);
-        window.open(`https://wa.me/923224164103?text=${msg}`);
+        window.open(`https://wa.me/923320344696?text=${msg}`);
     }
 
     init();
